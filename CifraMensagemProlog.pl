@@ -22,10 +22,22 @@ tam([H|T], S):-tam(T, G), S is 1 + G.
 colocaFlagFim(X, X, [H|T], [H|T]).
 colocaFlagFim(X, Y, [H|T], G) :- insereFim('k',[H|T], G).
 
-cifra2a2(0, L, [], []).
-cifra2a2(C, L, [H|T], G) :- condicionaCifragem(L,H,S), head(T, HT), tail(T,TT), cifra2a2(C-1, HT, TT, Y), G is conc(S,Y).
+cifra2a2(C, C, [], MX,[]).
+cifra2a2(C, S, [H|T], MX , [R|M]) :-  head(T, HT), condicionaCifragem(H,HT,MX,R), tail(T,TT), N is C-1, cifra2a2(N,0,TT,MX,M).
 
-condicionaCifragem(L,H,[L]).
+getElement(Ind, [H|T], C):- Ind== 0 -> C = H; Z is Ind-1, getElement(Z, T, C).
+
+getInd(E, [], 1).
+getInd(E, [E|T], 0):-!.
+getInd(E, [H|T], Ind):- getInd(E, T, X), Ind is X+1.
+
+getColuna(E, [],  5).
+getColuna(E, [H|T],  R) :- getInd(E,H,X), getColuna(E,T,S), indiceReal(X,S,R) .
+
+indiceReal(X,X,X).
+indiceReal(X,Y,X). 
+
+condicionaCifragem(L,H,MX,R) :- getColuna(L,MX,R). 
 
 matriz([['a','b','c','d','e'],['f','g','h','i','j'], ['k','l','m','n','o'], ['p','q','r','s','t'], ['u','v','w','x','z']]).
 
@@ -53,11 +65,10 @@ main:-
 	
 	matriz(Matriz),
 	
-	tail(ComFlag,AuxT2a2),
-	head(ComFlag,AuxH2a2),
 	tam(ComFlag,TamanhoComFlag),
 	N is (TamanhoComFlag/2),
-	cifra2a2(N, AuxH2a2, AuxT2a2, Cifrado).
+	cifra2a2(N,0,ComFlag,Matriz,Cifrado),
+	write(Cifrado).
 	
 
 
