@@ -54,6 +54,37 @@ coluna(A,B,C,D,MX,R) :- (A == 4 -> AA = 0; AA is A+1),getElementNaMatriz(AA,0,B,
 
 retangulo(A,B,C,D,MX,R) :- getElementNaMatriz(C,0,B,MX,RA),getElementNaMatriz(A,0,D,MX,RB),insereFim(RB,[RA],R).
 
+
+
+
+
+retiraFlagEspaco(L, [] , []).
+retiraFlagEspaco(L, [L|T], ['w'|G]):- retiraFlagEspaco(L, T, G).
+retiraFlagEspaco(L, [H|T] , [H|G]):- retiraFlagEspaco(L, T, G).
+
+retiraX(L, [], [L]).
+retiraX(L, [L|T], [L|['x'|S]]) :- retiraX(L,T,S).
+retiraX(L, [H|T], [L|S]) :- retiraX(H,T,S).
+
+retiraFlagFim(X, X, [H|T], [H|T]).
+retiraFlagFim(X, Y, [H|T], G) :- insereFim('k',[H|T], G).
+
+decifra2a2(C, C, [], MX,[]).
+decifra2a2(C, S, [H|T], MX , Result) :-  head(T, HT), condicionaDecifragem(H,HT,MX,R), tail(T,TT), N is C-1, decifra2a2(N,0,TT,MX,M), conc(R,M,Result).
+
+condicionaDeifragem(L,H,MX,R) :- getLinha(L,MX,A),getColuna(L,MX,B),getLinha(H,MX,C),getColuna(H,MX,D), decifragem(A,B,C,D,MX,R). 
+
+decifragem(A,B,C,D,MX,R) :- (A == C -> dlinha(A,B,C,D,MX,R); B == D -> dcoluna(A,B,C,D,MX,R); dretangulo(A,B,C,D,MX,R)).
+
+dlinha(A,B,C,D,MX,R) :- (B == 0 -> BB = 4; BB = B-1),getElementNaMatriz(A,0,BB,MX,RA),(D == 0 ->DD = 4; DD = D-1),getElementNaMatriz(C,0,DD,MX,RB),insereFim(RB,[RA],R).
+
+dcoluna(A,B,C,D,MX,R) :- (A == 0 -> AA = 4; AA is A-1),getElementNaMatriz(AA,0,B,MX,RA),(C == 0 ->CC = 4; CC is C-1),getElementNaMatriz(CC,0,D,MX,RB),insereFim(RB,[RA],R).
+
+dretangulo(A,B,C,D,MX,R) :- getElementNaMatriz(C,0,B,MX,RA),getElementNaMatriz(A,0,D,MX,RB),insereFim(RB,[RA],R).
+
+
+
+
 matriz([['a','b','c','d','e'],['f','g','h','i','j'], ['k','l','m','n','o'], ['p','q','r','s','t'], ['u','v','w','x','z']]).
 
 
