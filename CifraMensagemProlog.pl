@@ -57,10 +57,8 @@ retangulo(A,B,C,D,MX,R) :- getElementNaMatriz(C,0,B,MX,RA),getElementNaMatriz(A,
 matriz([['a','b','c','d','e'],['f','g','h','i','j'], ['k','l','m','n','o'], ['p','q','r','s','t'], ['u','v','w','x','z']]).
 
 
-:- initialization main.
 
-main:-
-
+cifraMensagem:-
 	read_line_to_codes(user_input, M),
 	string_to_atom(M,M2),
 	string_chars(M2,Mensagem),
@@ -80,8 +78,35 @@ main:-
 	tam(ComFlag,TamanhoComFlag),
 	N is (TamanhoComFlag/2),
 	cifra2a2(N,0,ComFlag,Matriz,Cifrado),
-	write(Cifrado).
+	string_chars(Cifrado,MensagemCifrada),
+	string_to_atom(MensagemCifrada,MensagemCifradaString),
+	write(MensagemCifradaString),nl,nl,
 	
+	main.
+	
+terminar:-
+	write("fim da execucao"),nl,nl.
+
+opcoesMain(X) :- X == 2 -> cifraMensagem; X == 6 -> terminar.
+
+
+
+:- initialization main.
+
+main:-
+	write("Digite o numero da opcao"),nl,
+	write("1. Escolher uma tabela de cifra nova"),nl,
+	write("2. Introduzir uma mensagem para cifrar"),nl,
+	write("3. Ver a mensagem cifrada"),nl,
+	write("4. Decifrar a mensagem"),nl,
+	write("5. Ver o alfabeto"),nl,
+	write("6. Terminar\n" ),nl,
+	
+	read_line_to_codes(user_input, A2),
+	string_to_atom(A2,A1),
+	atom_number(A1,A),
+	opcoesMain(A).
+
 
 
 
