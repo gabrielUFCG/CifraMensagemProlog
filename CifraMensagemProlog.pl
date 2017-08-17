@@ -54,10 +54,6 @@ coluna(A,B,C,D,MX,R) :- (A == 4 -> AA = 0; AA is A+1),getElementNaMatriz(AA,0,B,
 
 retangulo(A,B,C,D,MX,R) :- getElementNaMatriz(C,0,B,MX,RA),getElementNaMatriz(A,0,D,MX,RB),insereFim(RB,[RA],R).
 
-
-
-
-
 retiraFlagEspaco(L, [] , []).
 retiraFlagEspaco(L, [L|T], ['w'|G]):- retiraFlagEspaco(L, T, G).
 retiraFlagEspaco(L, [H|T] , [H|G]):- retiraFlagEspaco(L, T, G).
@@ -72,11 +68,11 @@ retiraFlagFim(X, Y, [H|T], G) :- insereFim('k',[H|T], G).
 decifra2a2(C, C, [], MX,[]).
 decifra2a2(C, S, [H|T], MX , Result) :-  head(T, HT), condicionaDecifragem(H,HT,MX,R), tail(T,TT), N is C-1, decifra2a2(N,0,TT,MX,M), conc(R,M,Result).
 
-condicionaDeifragem(L,H,MX,R) :- getLinha(L,MX,A),getColuna(L,MX,B),getLinha(H,MX,C),getColuna(H,MX,D), decifragem(A,B,C,D,MX,R). 
+condicionaDecifragem(L,H,MX,R) :- getLinha(L,MX,A),getColuna(L,MX,B),getLinha(H,MX,C),getColuna(H,MX,D), decifragem(A,B,C,D,MX,R). 
 
-decifragem(A,B,C,D,MX,R) :- (A == C -> dlinha(A,B,C,D,MX,R); B == D -> dcoluna(A,B,C,D,MX,R); dretangulo(A,B,C,D,MX,R)).
+decifragem(A,B,C,D,MX,R) :- ( A == C -> dlinha(A,B,C,D,MX,R); B == D -> dcoluna(A,B,C,D,MX,R); dretangulo(A,B,C,D,MX,R) ).
 
-dlinha(A,B,C,D,MX,R) :- (B == 0 -> BB = 4; BB = B-1),getElementNaMatriz(A,0,BB,MX,RA),(D == 0 ->DD = 4; DD = D-1),getElementNaMatriz(C,0,DD,MX,RB),insereFim(RB,[RA],R).
+dlinha(A,B,C,D,MX,R) :- (B == 0 -> BB = 4; BB is B-1),getElementNaMatriz(A,0,BB,MX,RA),(D == 0 ->DD = 4; DD is D-1),getElementNaMatriz(C,0,DD,MX,RB),insereFim(RB,[RA],R).
 
 dcoluna(A,B,C,D,MX,R) :- (A == 0 -> AA = 4; AA is A-1),getElementNaMatriz(AA,0,B,MX,RA),(C == 0 ->CC = 4; CC is C-1),getElementNaMatriz(CC,0,D,MX,RB),insereFim(RB,[RA],R).
 
@@ -115,10 +111,27 @@ cifraMensagem:-
 	
 	main.
 	
+decifraMensagem:-
+	read_line_to_codes(user_input, M),
+	string_to_atom(M,M2),
+	string_chars(M2,Mensagem),
+	
+	matriz(Matriz),
+
+	tam(Mensagem,TMensagem),
+	N is (TMensagem/2),
+
+	decifra2a2(N,0,Mensagem,Matriz,MensagemDecifrada),
+	string_chars(Cifrado,MensagemDecifrada),
+	string_to_atom(MensagemDecifrada,MensagemDecifradaString),
+	write(MensagemDecifradaString),nl,nl,
+	
+	main.
+
 terminar:-
 	write("fim da execucao"),nl,nl.
 
-opcoesMain(X) :- X == 2 -> cifraMensagem; X == 6 -> terminar.
+opcoesMain(X) :- X == 2 -> cifraMensagem; X == 3 -> decifraMensagem; X == 5 -> terminar.
 
 
 
@@ -128,10 +141,9 @@ main:-
 	write("Digite o numero da opcao"),nl,
 	write("1. Escolher uma tabela de cifra nova"),nl,
 	write("2. Introduzir uma mensagem para cifrar"),nl,
-	write("3. Ver a mensagem cifrada"),nl,
-	write("4. Decifrar a mensagem"),nl,
-	write("5. Ver o alfabeto"),nl,
-	write("6. Terminar\n" ),nl,
+	write("3. Decifrar a mensagem"),nl,
+	write("4. Ver o alfabeto"),nl,
+	write("5. Terminar\n" ),nl,
 	
 	read_line_to_codes(user_input, A2),
 	string_to_atom(A2,A1),
