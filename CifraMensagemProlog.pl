@@ -146,6 +146,17 @@ retiraXFalso([H|T], [H|G]) :-
 	(TamTail == 1 -> head(T, M), retiraXFalso([M|[]], G);
 	head(T, HT), tail(T, TT), head(TT, HTT), ( (H == HTT, HT == 'x') -> retiraXFalso(TT, G); retiraXFalso(T, G))).
 	
+desenhaLinha([]).
+desenhaLinha([H|T]) :- write(H), write(" "), 
+					   desenhaLinha(T).
+
+
+desenhaMatriz([]). 
+desenhaMatriz([H|T]) :- desenhaLinha(H), 
+						nl,
+						desenhaMatriz(T).
+	
+	
 
 matriz([
 	['a','b','c','d','e'],
@@ -157,25 +168,31 @@ matriz([
 
 
 cifraMensagem:-
+	write("Digite a mensagem a ser cifrada: "),
 	read_line_to_codes(user_input, M),
 	string_to_atom(M,M2),
 	string_chars(M2,Mensagem),
+	write(Mensagem),nl,
 	
 	colocaFlagEspaco(' ',Mensagem,SemEspaco),
+	write(SemEspaco),nl,
 	
 	tail(SemEspaco,AuxT),
 	head(SemEspaco,AuxH),
 	colocaX(AuxH,AuxT,OperacaoX),
+	write(OperacaoX),nl,
 	
 	tam(OperacaoX, TamanhoOperacaoX),
 	X is mod(TamanhoOperacaoX,2),
 	colocaFlagFim(X, 0, OperacaoX, ComFlag),
+	write(ComFlag),nl,
 	
 	matriz(Matriz),
 	
 	tam(ComFlag,TamanhoComFlag),
 	N is (TamanhoComFlag/2),
 	cifra2a2(N,0,ComFlag,Matriz,Cifrado),
+	write(Cifrado),nl,
 	
 	string_chars(Cifrado,MensagemCifrada),
 	string_to_atom(MensagemCifrada,MensagemCifradaString),
@@ -184,15 +201,18 @@ cifraMensagem:-
 	main.
 	
 decifraMensagem:-
+	write("Digite a mensagem a ser decifrada: "),
 	read_line_to_codes(user_input, M),
 	string_to_atom(M,M2),
 	string_chars(M2,Mensagem),
+	write(Mensagem),nl,
 	
 	matriz(Matriz),
 
 	tam(Mensagem,TMensagem),
 	N is (TMensagem/2),
 	decifra2a2(N,0,Mensagem,Matriz,Decifrado),
+	write(Decifrado),nl,
 	
 	retiraFlagFim('k',Decifrado,MsgSemFlagFim),
 	write(MsgSemFlagFim),nl,
@@ -209,22 +229,28 @@ decifraMensagem:-
 	
 	main.
 
+printaMatriz:-
+	write("Matriz atual:"),nl,
+	matriz(Matriz),
+	desenhaMatriz(Matriz),nl,nl,
+	main.
+				 
 terminar:-
 	write("fim da execucao"),nl,nl.
 
-opcoesMain(X) :- X == 2 -> cifraMensagem; X == 3 -> decifraMensagem; X == 5 -> terminar.
+opcoesMain(X) :- X == 1 -> cifraMensagem; X == 2 -> decifraMensagem;X == 3 -> printaMatriz; X == 4 -> terminar.
 
 
 
 :- initialization main.
 
 main:-
+
 	write("Digite o numero da opcao"),nl,
-	write("1. Escolher uma tabela de cifra nova"),nl,
-	write("2. Introduzir uma mensagem para cifrar"),nl,
-	write("3. Decifrar a mensagem"),nl,
-	write("4. Ver o alfabeto"),nl,
-	write("5. Terminar\n" ),nl,
+	write("1. Introduzir uma mensagem para cifrar"),nl,
+	write("2. Decifrar uma mensagem"),nl,
+	write("3. Ver o alfabeto"),nl,
+	write("4. Terminar\n" ),nl,
 	
 	read_line_to_codes(user_input, A2),
 	string_to_atom(A2,A1),
